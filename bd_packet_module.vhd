@@ -54,7 +54,14 @@ ENTITY bd_packet_module IS
 
 END ENTITY bd_packet_module;
 ARCHITECTURE RTL OF bd_packet_module IS
-
+	SIGNAL command_reg_M       : std_logic_vector(15 DOWNTO 0); -- Command Reg Master
+	SIGNAL command_reg_M_valid : std_logic;
+	SIGNAL data_reg_M          : std_logic_vector(15 DOWNTO 0); -- Data Reg Master
+	SIGNAL data_reg_M_valid    : std_logic;
+	SIGNAL command_reg_S       : std_logic_vector(15 DOWNTO 0); -- Command Reg Slave
+	SIGNAL data_reg_S          : std_logic_vector(15 DOWNTO 0); -- Data Reg Slave
+	SIGNAL LVDS_data_test      : std_logic;
+	SIGNAL LVDS_clk_test       : std_logic;
 	ATTRIBUTE KEEP_HIERARCHY OF RTL : ARCHITECTURE IS "TRUE";
 	COMPONENT packet_layer_Master IS
 		GENERIC (
