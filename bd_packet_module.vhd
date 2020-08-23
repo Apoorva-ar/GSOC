@@ -48,7 +48,7 @@ ENTITY bd_packet_module IS
 		s_axi_ro : OUT axi3ml_read_in_r;
 		s_axi_ri : IN axi3ml_read_out_r;
 		s_axi_wo : OUT axi3ml_write_in_r;
-		s_axi_wi : IN axi3ml_write_out_r;
+		s_axi_wi : IN axi3ml_write_out_r
 
 	);
 
