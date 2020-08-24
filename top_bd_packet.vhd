@@ -1233,14 +1233,14 @@ BEGIN
 	-- CMV SPI Interface
 	--------------------------------------------------------------------
 
-	BD_PACKET_Layer : ENTITY bd_packet_module
+	BD_PACKET_Layer : ENTITY work.bd_packet_module
 		PORT MAP(
 			s_axi_aclk     => m_axi0_aclk,
 			s_axi_areset_n => m_axi0_areset_n,
 			--
-			s_axi_ro => m_axi0l_ro,
-			s_axi_ri => m_axi0l_ri,
-			s_axi_wo => m_axi0l_wo,
-			s_axi_wi => m_axi0l_wi,
+			s_axi_ro => m_axi0l_ri,
+			s_axi_ri => m_axi0l_ro,
+			s_axi_wo => m_axi0l_wi,
+			s_axi_wi => m_axi0l_wo);
 
 END RTL;
