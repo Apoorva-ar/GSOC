@@ -54,7 +54,7 @@ ENTITY bd_packet_module IS
 
 END ENTITY bd_packet_module;
 ARCHITECTURE RTL OF bd_packet_module IS
-	SIGNAL command_reg_M       : std_logic_vector(15 DOWNTO 0); -- Command Reg Master
+      SIGNAL command_reg_M       : std_logic_vector(15 DOWNTO 0); -- Command Reg Master
 	SIGNAL command_reg_M_valid : std_logic;
 	SIGNAL data_reg_M          : std_logic_vector(15 DOWNTO 0); -- Data Reg Master
 	SIGNAL data_reg_M_valid    : std_logic;
@@ -219,18 +219,18 @@ BEGIN
 						state     := r_data_s;
 
 					WHEN r_data_s =>
+					arready_v := '0';         -- done with addr
 						------ ADD ADDRESS BASED CONDITIONS FOR COMMAND AND DATA REG
-						IF addr_v(1 DOWNTO 0) = "10" THEN
-							arready_v := '0';           -- done with addr
-							rdata_v   := command_reg_S; -- OUTPUT DATA REGISTER
+						IF addr_v = x"40000008" THEN
+							rdata_v(15 downto 0)   := command_reg_S; -- OUTPUT DATA REGISTER
+							rdata_v(31 downto 16)   := data_reg_S;
 							rresp_v   := "00";          -- okay
-						ELSIF addr_v(1 DOWNTO 0) = "11" THEN
-							arready_v := '0';        -- done with addr
-							rdata_v   := data_reg_S; -- OUTPUT DATA REGISTER
+						ELSIF addr_v = x"40000012"  THEN
+							rdata_v(15 downto 0)   := data_reg_S; -- OUTPUT DATA REGISTER
+							rdata_v(31 downto 16)   := x"1212";
 							rresp_v   := "00";       -- okay
 						ELSE
-							arready_v := '0';         -- done with addr
-							rdata_v   := x"12121212"; -- TEST DATA
+							rdata_v   := (others=>'0'); -- TEST DATA
 							rresp_v   := "00";        -- okay
 						END IF;
 						IF s_axi_ri.rready = '1' THEN -- master ready
@@ -253,20 +253,26 @@ BEGIN
 						wready_v  := '1'; -- ready for data
 
 						IF s_axi_wi.wvalid = '1' THEN                       -- data transfer
-							IF addr_v(1 DOWNTO 0) = "00" THEN                   -- command
+							IF addr_v = x"40000000" THEN                   -- command
 								command_reg_M       <= s_axi_wi.wdata(15 DOWNTO 0); -- command data
 								command_reg_M_valid <= '1';
-							ELSIF addr_v(1 DOWNTO 0) = "01" THEN
-								data_reg_M := s_axi_wi.wdata(15 DOWNTO 0); -- store data in INPUT_REG
+								wstrb_v := s_axi_wi.wstrb;
+								bresp_v := "00"; -- transfer OK
+								state   := w_resp_s;
+							ELSIF addr_v = x"40000004" THEN
+								data_reg_M <= s_axi_wi.wdata(15 DOWNTO 0); -- store data in INPUT_REG
 								data_reg_M_valid <= '1';
 								wstrb_v := s_axi_wi.wstrb;
 								bresp_v := "00"; -- transfer OK
 								state   := w_resp_s;
 							ELSE
+								wstrb_v := s_axi_wi.wstrb;
+								bresp_v := "00"; -- transfer OK
+								state   := w_resp_s;
 							END IF;
-						ELSE
-							command_reg_M_valid <= '0';
-							data_reg_M_valid    <= '0';
+						--ELSE
+						--	command_reg_M_valid <= '0';
+						--	data_reg_M_valid    <= '0';
 						END IF;
 
 					WHEN w_resp_s =>
