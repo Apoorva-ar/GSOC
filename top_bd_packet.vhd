@@ -47,34 +47,7 @@ ENTITY top IS
 		spi_en  : OUT std_ulogic;
 		spi_clk : OUT std_ulogic;
 		spi_in  : OUT std_ulogic;
-		spi_out : IN std_ulogic;
-		-- 
-		cmv_clk       : OUT std_ulogic;
-		cmv_sys_res_n : OUT std_ulogic;
-		cmv_frame_req : OUT std_ulogic;
-		cmv_t_exp1    : OUT std_ulogic;
-		cmv_t_exp2    : OUT std_ulogic;
-		--
-		cmv_lvds_clk_p : OUT std_logic;
-		cmv_lvds_clk_n : OUT std_logic;
-		--
-		cmv_lvds_outclk_p : IN std_logic;
-		cmv_lvds_outclk_n : IN std_logic;
-		--
-		cmv_lvds_data_p : IN unsigned(31 DOWNTO 0);
-		cmv_lvds_data_n : IN unsigned(31 DOWNTO 0);
-		--
-		cmv_lvds_ctrl_p : IN std_logic;
-		cmv_lvds_ctrl_n : IN std_logic;
-		--
-		hdmi_south_clk_p : OUT std_logic;
-		hdmi_south_clk_n : OUT std_logic;
-		--
-		hdmi_south_d_p : OUT std_logic_vector (2 DOWNTO 0);
-		hdmi_south_d_n : OUT std_logic_vector (2 DOWNTO 0);
-
-		debug_tmds : OUT std_logic_vector (3 DOWNTO 0);
-		debug      : OUT std_logic_vector (3 DOWNTO 0)
+		spi_out : IN std_ulogic
 	);
 
 END ENTITY top;
@@ -1233,7 +1206,7 @@ BEGIN
 	-- CMV SPI Interface
 	--------------------------------------------------------------------
 
-	BD_PACKET_Layer : ENTITY work.bd_packet_module
+   BD_PACKET_Layer : ENTITY work.bd_packet_module
 		PORT MAP(
 			s_axi_aclk     => m_axi0_aclk,
 			s_axi_areset_n => m_axi0_areset_n,
