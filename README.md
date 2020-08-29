@@ -39,7 +39,9 @@ Both master as well as slave FSMs are initiated on write/read transaction enable
   - `PHY_Master.vhd: VHDL` code for Master PHY layer -> SERDES that controls clock as well as data. </br>
     - `PHY_Data_Path.vhd` : VHDL code for controlling SERDES data path.</br>
     - `PHY_sclk_gen.vhd`  : VHDL code for controlling LVDS clock.</br>
+    
 `PHY_Slave_Controller.vhd` : VHDL Controller for controlling PHY Slave  </br>
+  - `PHY_Slave.vhd: VHDL` code for Slave PHY layer -> Slave SERDES. </br>
 
 ## Applications
 
