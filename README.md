@@ -51,11 +51,19 @@ Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the follow
 - Transfer the bit file to `/boot` directory.
 - The uboot system requires bin file instead of bit file. Hence we need to convert the bit file to binary either via Xiinx Vivado itself or via the script `/opt/axiom-firmware/makefiles/in-chroot/to_war_bitstream.py -f /boot/my_bitfile.bit /boot/my_binfile.bin`.
 Inorder to place the bin file in system memory, we need to access uboot bootloader. during the boot session, stop the process and run the following commands.
-- `fatload 0 0x20000000 my_binfile.bin`. *This will load the bin file pointing to address 0x20000000 insystem memory. The output will be the total bytes written to the memory*.
+- `fatload 0 0x20000000 my_binfile.bin`. This will load the bin file pointing to address 0x20000000 insystem memory. The output will be the total bytes written to the memory.
 - `fpga load 0 0x20000000 <bytes>`. This will flash the binary file of size <bytes> to the FPGA.
   
 ### Flashing Bit file on MACHXO2
-
+Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the following commands to flash the bit file on ZYNQ-PL(FPGA).
+- Transfer the bit file to `/lib/firmware` directory.
+- The linux device driver as well as all the required scripts are placed in user->operator's rfdev-stuff directory.
+- Enter the rfdev-stuff directory `cd /home/operator/rfdev-stuff`.
+- run the script `./do_all`. This script will power ON the MACHXO2, PIC microcontroller (which pragrams MACHXO2 via JTAG) as well as establish i2c link between ZYNQ and PIC.
+- load the device driver module into linux kernel space by `insmod rfdev.ko`.
+- Change the directory to `cd /sys/class/fpga_manager/fpga1`.
+- run `echo my_bit_file.bit>firmware`. This will load the bitstrem into MACHXO2.
+- inorder to cheack the sucess of hte operation run `catstatstr`.
 
 
 ## Applications
