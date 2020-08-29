@@ -43,6 +43,14 @@ Both master as well as slave FSMs are initiated on write/read transaction enable
 `PHY_Slave_Controller.vhd` : VHDL Controller for controlling PHY Slave  </br>
   - `PHY_Slave.vhd: VHDL` code for Slave PHY layer -> Slave SERDES. </br>
 
+## Running the application on Apertus AXIOM Beta
+The application runs on ZYNQ-SOC as Master and MACHXO2 as Slave. In order to access as well as flash the bitstreams on the ZYNQ-PL(Programmable logic) as well as MACHXO2 from linux running on ZYNQ-PS. Following steps are followed.
+
+### Flashing Bit file on ZYNNQ-PL
+Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the following commands to flash the bit file on ZYNQ-PL(FPGA).
+- Transfer the bit file to `/boot` directory.
+- The uboot system requires bin file instead of bit file. Hence we need to convert the bit file to binary either via Xiinx Vivado itself or via the script `/opt/axiom-firmware/makefiles/in-chroot/to_war_bitstream.py -f /boot/my_bitfile.bit /boot/my_binfile.bin`.
+
 ## Applications
 
 ## Structure
