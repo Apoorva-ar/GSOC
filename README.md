@@ -25,18 +25,21 @@ This layer accepts commands from upper layers namely scheduling layer in order t
 data flow between master and slave devices is synchronised and controlled. </br>
 - The master packet layer FSM decodes the command in order to generate/receive data packets (burst).
 - The slave packet layer on the other hand reads command packet and then demands/produces data from/to the slave peripheral. </br>
-- `Packet_Layer_Master.vhd` : VHDL code for generating/receiving packets as well as controlling read/write transactions as well as burst cycle of the lower PHY Master layer.
-- `Packet_Layer_Slave.vhd` : VHDL code for generating/receving packets as well as controlling read/write transactions as well as burst cycle of the lower PHY Slave layer.
+
+`Packet_Layer_Master.vhd` : VHDL code for generating/receiving packets as well as controlling read/write transactions as well as burst cycle of the lower PHY Master layer.
+
+`Packet_Layer_Slave.vhd` : VHDL code for generating/receving packets as well as controlling read/write transactions as well as burst cycle of the lower PHY Slave layer.
 
 #### PHY Layer
 This layer acts as bidirectional SERDES for the user. There are two major modules involved mainly master and slave. </br>
 - Master produces clock while slave transmits and receives data on that clock.
 Both master as well as slave FSMs are initiated on write/read transaction enable signals from upper layers (in this case the packet layer). Hence, the upper layer has full control over the SERDES in terms of avoiding any possible cross-talks.</br>
-- `PHY_Master_controller.vhd` : VHDL Controller for controlling PHY Master </br>
+
+`PHY_Master_controller.vhd` : VHDL Controller for controlling PHY Master </br>
   - `PHY_Master.vhd: VHDL` code for Master PHY layer -> SERDES that controls clock as well as data. </br>
     - `PHY_Data_Path.vhd` : VHDL code for controlling SERDES data path.</br>
     - `PHY_sclk_gen.vhd`  : VHDL code for controlling LVDS clock.</br>
-- `PHY_Slave_Controller.vhd` : VHDL Controller for controlling PHY Slave  </br>
+`PHY_Slave_Controller.vhd` : VHDL Controller for controlling PHY Slave  </br>
 
 ## Applications
 
