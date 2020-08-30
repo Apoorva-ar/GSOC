@@ -12,6 +12,8 @@ Aim of the project is to design a packet based bidirectional protocol over singl
   - Then based on the command either data is written to the LVDS link or is read from it. The schedulers on both the master as well as slave sides ensures that there is no bus contention.
 - The physical layer PHY acts as bidirectional SERDES. The master PHY produces both clock and data while slave PHY produces/receives data on the clock provided by master.
 
+#### ZYNQ-AXI Sub system Layer
+
 #### Scheduling Layer
 The main idea behind scheduling is to ensure that high priority tasks get served before lower priority tasks. The input command is captured from software via AXI lite register. 
 - Based on the priority of the service mentioned in the scheduler, the data latch FSM stores the command word in respective priority FIFO and the subsequent data is further stored in relevant FIFO based on the priority. 
