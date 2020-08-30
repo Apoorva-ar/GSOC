@@ -52,7 +52,7 @@ Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the follow
 - Transfer the bit file to `/boot` directory.
 - The uboot system requires bin file instead of bit file. Hence we need to convert the bit file to binary either via Xiinx Vivado itself or via the script `/opt/axiom-firmware/makefiles/in-chroot/to_war_bitstream.py -f /boot/my_bitfile.bit /boot/my_binfile.bin`.
 Inorder to place the bin file in system memory, we need to access uboot bootloader. during the boot session, stop the process and run the following commands.
-- `fatload 0 0x20000000 my_binfile.bin`. This will load the bin file pointing to address 0x20000000 insystem memory. The output will be the total bytes written to the memory.
+- `fatload mmc 0 0x20000000 my_binfile.bin`. This will load the bin file pointing to address 0x20000000 insystem memory. The output will be the total bytes written to the memory.
 - `fpga load 0 0x20000000 <bytes>`. This will flash the binary file of size <bytes> to the FPGA.
   
 ### Flashing Bit file on MACHXO2
