@@ -1,18 +1,15 @@
 ----------------------------------------------------------------------------
---  top.vhd (for cmv_hdmi)
---	Axiom Beta CMV HDMI Test
---	Version 1.3
+--  top.vhd (for bidirectional packet protocol)
+--	Axiom Beta Bidirectional Packet protocol Test
+--	Version 1.0
 --
---  Copyright (C) 2013-2015 H.Poetzl
+--  Copyright (C) Herbert Poetzl, Apoorva Arora, Rahul Vyas
 --
 --	This program is free software: you can redistribute it and/or
 --	modify it under the terms of the GNU General Public License
 --	as published by the Free Software Foundation, either version
 --	2 of the License, or (at your option) any later version.
 --
---  Vivado 2014.2:
---    mkdir -p build.vivado
---    (cd build.vivado && vivado -mode tcl -source ../vivado.tcl)
 ----------------------------------------------------------------------------
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
@@ -39,15 +36,12 @@ USE work.hdmi_pll_pkg.ALL;  -- HDMI PLL Configs
 USE work.vec_mat_pkg.ALL;   -- Vector/Matrix
 USE work.helper_pkg.ALL;    -- Vivado Attributes
 USE work.vec_mat_pkg.ALL;   -- Vector Types
+
 ENTITY top IS
 	PORT (
-		i2c_scl : INOUT std_ulogic;
-		i2c_sda : INOUT std_ulogic;
-		--
-		spi_en  : OUT std_ulogic;
-		spi_clk : OUT std_ulogic;
-		spi_in  : OUT std_ulogic;
-		spi_out : IN std_ulogic
+		LVDS_IO_top_p : INOUT std_logic;
+		LVDS_IO_top_n : INOUT std_logic;
+		LVDS_clk_top : OUT std_logic
 	);
 
 END ENTITY top;
@@ -62,14 +56,22 @@ ARCHITECTURE RTL OF top IS
 			s_axi_ro : OUT axi3ml_read_in_r;
 			s_axi_ri : IN axi3ml_read_out_r;
 			s_axi_wo : OUT axi3ml_write_in_r;
-			s_axi_wi : IN axi3ml_write_out_r
-
+			s_axi_wi : IN axi3ml_write_out_r;
+			--
+			LVDS_O_bd: OUT std_logic;
+		    LVDS_I_bd: IN std_logic;
+			LVDS_clk_bd: OUT std_logic;
+	        LVDS_tristate_bd : out std_logic
 		);
 
 	END COMPONENT;
 
 	ATTRIBUTE KEEP_HIERARCHY OF RTL : ARCHITECTURE IS "TRUE";
-
+	SIGNAL LVDS_output_buf : std_logic;
+	SIGNAL LVDS_input_buf : std_logic;	
+    SIGNAL tristate_en : std_logic;
+    SIGNAL Output_LVDS :std_logic;
+    SIGNAL Input_LVDS :std_logic;    
 	SIGNAL clk_100 : std_logic;
 
 	SIGNAL debug_data   : std_logic_vector (3 DOWNTO 0);
@@ -233,10 +235,6 @@ ARCHITECTURE RTL OF top IS
 	--------------------------------------------------------------------
 
 	SIGNAL lvds_pll_locked : std_ulogic;
-
-	SIGNAL lvds_clk : std_ulogic;
-	SIGNAL word_clk : std_ulogic;
-
 	SIGNAL cmv_outclk : std_ulogic;
 
 	--------------------------------------------------------------------
@@ -267,9 +265,6 @@ ARCHITECTURE RTL OF top IS
 	--------------------------------------------------------------------
 	-- CMV Serdes Signals
 	--------------------------------------------------------------------
-
-	ALIAS serdes_clk    : std_logic IS lvds_clk;
-	ALIAS serdes_clkdiv : std_logic IS word_clk;
 
 	SIGNAL serdes_phase : std_logic;
 
@@ -1214,6 +1209,24 @@ BEGIN
 			s_axi_ro => m_axi0l_ri,
 			s_axi_ri => m_axi0l_ro,
 			s_axi_wo => m_axi0l_wi,
-			s_axi_wi => m_axi0l_wo);
+			s_axi_wi => m_axi0l_wo,
+			LVDS_O_bd => LVDS_output_buf,
+			LVDS_I_bd => LVDS_input_buf,			
+			LVDS_clk_bd => LVDS_clk_top,
+			LVDS_tristate_bd => tristate_en
+			);
 
-END RTL;
+IOBUFDS_inst : IOBUFDS
+generic map (   DIFF_TERM => FALSE, -- Differential Termination (TRUE/FALSE)
+                IBUF_LOW_PWR => TRUE, -- Low Power = TRUE, High Performance = FALSE 
+                IOSTANDARD => "LVDS_25", -- Specify the I/O standard
+                SLEW => "SLOW")       -- Specify the output slew rate
+port map (   O => LVDS_input_buf,     -- Buffer output
+            IO => LVDS_IO_top_p,      -- Diff_p inout (connect directly to top-level port) 
+           IOB => LVDS_IO_top_n,      -- Diff_n inout (connect directly to top-level port)
+             I => LVDS_output_buf,    -- Buffer input
+             T => tristate_en         -- 3-state enable input, high=input, low=output
+          );
+
+                 
+ END RTL;
