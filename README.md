@@ -61,11 +61,15 @@ Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the follow
 - The linux device driver as well as all the required scripts are placed in user->operator's rfdev-stuff directory.
 - Enter the rfdev-stuff directory `cd /home/operator/rfdev-stuff`.
 - run the script `./do_all`. This script will power ON the MACHXO2, PIC microcontroller (which pragrams MACHXO2 via JTAG) as well as establish i2c link between ZYNQ and PIC.
-- load the device driver module into linux kernel space by `insmod rfdev.ko`.
+- load the device driver module into linux kernel space by `insmod /home/operator/rfdev.ko`.
 - Change the directory to `cd /sys/class/fpga_manager/fpga1`.
 - run `echo my_bit_file.bit>firmware`. This will load the bitstrem into MACHXO2.
 - inorder to cheack the sucess of hte operation run `catstatstr`.
 
+## Testing
+Following VHDL testbenches were used to perform software based unit tests of individual modules.
+### Running loopback test on ZYNQ.
+Following steps are followed for running loopback test on ZYNQ in order to perform hardware based functional verification.
 
 ## Applications
 
@@ -73,7 +77,7 @@ Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the follow
 
 ### Modules invovled
 
-## Testing
+
 
 
 
