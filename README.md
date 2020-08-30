@@ -64,7 +64,7 @@ Access the terminal of linux running on ZYNQ-PL of AXIOM-Beta and run the follow
 - load the device driver module into linux kernel space by `insmod /home/operator/rfdev.ko`.
 - Change the directory to `cd /sys/class/fpga_manager/fpga1`.
 - run `echo my_bit_file.bit>firmware`. This will load the bitstrem into MACHXO2.
-- inorder to cheack the sucess of hte operation run `catstatstr`.
+- inorder to cheack the sucess of hte operation run `cat statstr`.
 
 ## Testing
 Following VHDL testbenches were used to perform software based unit tests of individual modules.
